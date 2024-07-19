@@ -1,63 +1,30 @@
-const buttons = document.querySelectorAll('button');
-const display = document.getElementById('display');
+const display = document.querySelector("#display");
+const buttons = document.querySelectorAll("button");
 
-let currentNumber = '';
-let previousNumber = '';
-let operation = '';
-
-buttons.forEach(button => {
-    button.addEventListener('click', (event) => {
-        event.preventDefault();
-        const value = button.textContent;
-
-        if (value === 'C') {
-            currentNumber = '';
-            previousNumber = '';
-            operation = '';
-            display.value = '0'
-        } else if (value === '=') {
-            if(currentNumber && previousNumber && operation) {
-                const result = calculate(previousNumber, currentNumber, operation);
-                display.value = result;
-                currentNumber = result;
-                previousNumber = '';
-                operation = '';
-            }
-        } else if (value === '+' || value === '-' || value === '*' || value === '/' || value === '^' || value === '%') {
-            if (currentNumber) {
-                previousNumber = currentNumber;
-                currentNumber = '';
-                operation = value;
-            }
-        } else if (value === 'DEL') {
-            if(currentNumber) {
-                currentNumber = currentNumber.slice(0, -1);
-                display.value = currentNumber;
-            }
-        } else {
-            if (currentNumber.length < 10) {
-                currentNumber += value;
-                display.value = currentNumber;
-            }
-        }
-    });
+buttons.forEach((item) => {
+  item.onclick = () => {
+    if (item.id == "clear") {
+      display.innerText = "";
+    } else if (item.id == "backspace") {
+      let string = display.innerText.toString();
+      display.innerText = string.substr(0, string.length - 1);
+    } else if (display.innerText != "" && item.id == "equal") {
+      display.innerText = eval(display.innerText);
+    } else if (display.innerText == "" && item.id == "equal") {
+      display.innerText = "Empty!";
+      setTimeout(() => (display.innerText = ""), 2000);
+    } else {
+      display.innerText += item.id;
+    }
+  };
 });
 
-function calculate(previousNumber, currentNumber, operation) {
-    const num1 = parseFloat(previousNumber);
-    const num2 = parseFloat(currentNumber);
-
-    if (operation === '+') {
-        return num1 + num2;
-    } else if (operation === '-') {
-        return num1 - num2;
-    } else if (operation === '*') {
-        return num1 * num2;
-    } else if (operation === '/') {
-        return num1 / num2;
-    } else if (operation === '^') {
-        return Math.pow(num1, num2);
-    } else if (operation === '%') {
-        return num1 % num2;
-    }
-}
+const themeToggleBtn = document.querySelector(".theme-toggler");
+const calculator = document.querySelector(".calculator");
+const toggleIcon = document.querySelector(".toggler-icon");
+let isDark = true;
+themeToggleBtn.onclick = () => {
+  calculator.classList.toggle("dark");
+  themeToggleBtn.classList.toggle("active");
+  isDark = !isDark;
+};
